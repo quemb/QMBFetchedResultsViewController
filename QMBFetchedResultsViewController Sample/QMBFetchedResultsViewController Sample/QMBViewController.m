@@ -1,28 +1,45 @@
-QMBFetchedResultsViewController
-===============================
+//
+//  QMBViewController.m
+//  QMBFetchedResultsViewController Sample
+//
+//  Created by Toni Möckel on 13.07.13.
+//  Copyright (c) 2013 Toni Möckel. All rights reserved.
+//
 
-A simple UIViewController subclass that implements NSFetchedResultsControllerDelegate and manages a table view binded to a custom fetch request.
+#import "QMBViewController.h"
 
-- Simple fetch requests
-- Support of sections
-- Simple customization via overriding
-- Sample code provided
-- Support for Storyboard (see sample code)
+#import "Sample.h"
+#import "QMBAppDelegate.h"
 
-### Example ###
+@interface QMBViewController ()
 
-Set your managed object context via override:
-<pre>
+@end
+
+@implementation QMBViewController
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    //Sample Data Import
+    NSString* plistPath = [[NSBundle mainBundle] pathForResource:@"SampleData" ofType:@"plist"];
+    NSArray *contentArray = [NSArray arrayWithContentsOfFile:plistPath];
+    
+    for (NSDictionary *dict in contentArray) {
+        Sample *sample = [NSEntityDescription insertNewObjectForEntityForName:@"Sample" inManagedObjectContext:self.managedObjectContext];
+        [sample setValuesForKeysWithDictionary:dict];
+        
+    }
+    
+}
+
+#pragma mark - QMBFetchedResultController Overrides
 
 - (NSManagedObjectContext *)managedObjectContext
 {
     return [((QMBAppDelegate *)[[UIApplication sharedApplication] delegate]) managedObjectContext];
 }
 
-</pre>
-
-Set your fetch Request (section is optional):
-<pre>
 - (NSFetchRequest *)getFetchRequest
 {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
@@ -38,17 +55,12 @@ Set your fetch Request (section is optional):
     
     return fetchRequest;
 }
-</pre>
 
-Set your UITableViewCell - styles
-<pre>
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Sample *sample = (Sample *)[self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = sample.title;
     cell.detailTextLabel.text = sample.subtitle;
 }
-</pre>
 
-### Credits ###
-- [raywenderlich | Example](http://www.raywenderlich.com/999/core-data-tutorial-how-to-use-nsfetchedresultscontroller)
+@end
