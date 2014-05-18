@@ -40,7 +40,24 @@
     return [((QMBAppDelegate *)[[UIApplication sharedApplication] delegate]) managedObjectContext];
 }
 
-- (NSFetchRequest *)getFetchRequest
+- (NSString *)entityName {
+    return @"Sample";
+}
+
+- (NSArray *)sortDescriptors {
+    return @[
+             [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES]
+             ];
+}
+
+- (NSPredicate *)searchPredicateWithSearchText:(NSString *)searchText scope:(NSInteger)scope {
+    return [NSPredicate predicateWithFormat:@"title CONTAINS[cd] %@", searchText];
+}
+
+/**
+ * Or rewrite the whole fetch request
+ 
+- (NSFetchRequest *) fetchRequest
 {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     
@@ -55,12 +72,15 @@
     
     return fetchRequest;
 }
+ */
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(UITableViewCell *)cell forTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath
 {
-    Sample *sample = (Sample *)[self.fetchedResultsController objectAtIndexPath:indexPath];
+    Sample *sample = [self objectAtIndexPath:indexPath forTableView:tableView];
+    
     cell.textLabel.text = sample.title;
     cell.detailTextLabel.text = sample.subtitle;
+    
 }
 
 @end

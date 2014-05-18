@@ -6,8 +6,8 @@
 //  Copyright (c) 2013 Toni Möckel. All rights reserved.
 //
 
-#import "QMBFetchedResultsViewController.h"
+#import "QMBFetchedSearchResultsViewController.h"
 
-@interface QMBViewController : QMBFetchedResultsViewController
+@interface QMBViewController : QMBFetchedSearchResultsViewController
 
 @end

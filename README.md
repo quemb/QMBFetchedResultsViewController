@@ -6,8 +6,20 @@ A simple UIViewController subclass that implements NSFetchedResultsControllerDel
 - Simple fetch requests
 - Support of sections
 - Simple customization via overriding
-- Sample code provided
-- Support for Storyboard (see sample code)
+- Use Offset to manage custom sections or rows (at the top)
+- Addional Filter Controller (inspired by: [lukagabric/LargeDatasetSample](https://github.com/lukagabric/LargeDatasetSample))
+
+![Demo](QMBFetchedResultsViewController-Sample/cast.gif)
+
+### Pod ###
+
+Not yet contributed but you can include it via:
+<pre>
+
+pod 'QMBFetchedResultsViewController', :git => 'https://github.com/quemb/QMBFetchedResultsViewController.git'
+
+</pre>
+
 
 ### Example ###
 
@@ -52,3 +64,4 @@ Set your UITableViewCell - styles
 
 ### Credits ###
 - [raywenderlich | Example](http://www.raywenderlich.com/999/core-data-tutorial-how-to-use-nsfetchedresultscontroller)
+- [lukagabric | LargeDatasetSample](https://github.com/lukagabric/LargeDatasetSample)

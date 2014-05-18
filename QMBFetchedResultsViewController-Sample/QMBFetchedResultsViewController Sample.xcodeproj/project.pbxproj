@@ -23,6 +23,7 @@
 		E2B0492817919418007C45ED /* QMBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B0492717919418007C45ED /* QMBViewController.m */; };
 		E2B0492B179194B3007C45ED /* Sample.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B0492A179194B3007C45ED /* Sample.m */; };
 		E2B0492E17919561007C45ED /* SampleData.plist in Resources */ = {isa = PBXBuildFile; fileRef = E2B0492D17919561007C45ED /* SampleData.plist */; };
+		E2FA909D1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2FA909C1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,8 @@
 		E2B04929179194B3007C45ED /* Sample.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sample.h; path = Model/Sample.h; sourceTree = "<group>"; };
 		E2B0492A179194B3007C45ED /* Sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Sample.m; path = Model/Sample.m; sourceTree = "<group>"; };
 		E2B0492D17919561007C45ED /* SampleData.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = SampleData.plist; sourceTree = "<group>"; };
+		E2FA909B1928F919003D35D9 /* QMBFetchedSearchResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBFetchedSearchResultsViewController.h; sourceTree = "<group>"; };
+		E2FA909C1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBFetchedSearchResultsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +131,8 @@
 			children = (
 				E2B04921179193A3007C45ED /* QMBFetchedResultsViewController.h */,
 				E2B04922179193A3007C45ED /* QMBFetchedResultsViewController.m */,
+				E2FA909B1928F919003D35D9 /* QMBFetchedSearchResultsViewController.h */,
+				E2FA909C1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m */,
 			);
 			name = QMBFetchedResultsViewController;
 			path = ../QMBFetchedResultsViewController;
@@ -240,6 +245,7 @@
 				E2B0491117919389007C45ED /* QMBAppDelegate.m in Sources */,
 				E2B0491A17919389007C45ED /* QMBFetchedResultsViewController_Sample.xcdatamodeld in Sources */,
 				E2B04923179193A3007C45ED /* QMBFetchedResultsViewController.m in Sources */,
+				E2FA909D1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m in Sources */,
 				E2B0492817919418007C45ED /* QMBViewController.m in Sources */,
 				E2B0492B179194B3007C45ED /* Sample.m in Sources */,
 			);
@@ -360,6 +366,7 @@
 				E2B0491F17919389007C45ED /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

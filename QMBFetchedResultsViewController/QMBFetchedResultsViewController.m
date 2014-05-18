@@ -10,6 +10,7 @@
 
 @interface QMBFetchedResultsViewController (){
     NSIndexPath* _lastDeleteItemIndexPathAsked;
+
 }
 
 
@@ -21,12 +22,28 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObject = _managedObject;
 
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
 
 - (void)viewDidLoad
 {
+    
     [super viewDidLoad];
     
-	NSError *error;
+	[self performFetch];
+    
+    
+}
+
+- (void) performFetch
+{
+    NSError *error;
 	if (![[self fetchedResultsController] performFetch:&error]) {
 		// Update to handle the error appropriately.
 		NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -34,9 +51,24 @@
 	}
 }
 
-- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext
+- (void)didReceiveMemoryWarning
 {
-    _managedObjectContext = managedObjectContext;
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void) onEnterEditMode:(id)sender{
+    if ([self.tableView isEditing]) {
+        // If the tableView is already in edit mode, turn it off. Also change the title of the button to reflect the intended verb (‘Edit’, in this case).
+        if ([sender class] == [UIButton class]){
+            [(UIButton *)sender setImage:[UIImage imageNamed:@"icon_edit_header_information"] forState:UIControlStateNormal];
+        }
+        [self.tableView setEditing:NO animated:YES];
+    }
+    else {
+        [(UIButton *)sender setImage:[UIImage imageNamed:@"menubar_save"] forState:UIControlStateNormal];
+        [self.tableView setEditing:YES animated:YES];
+    }
 }
 
 - (NSManagedObjectContext *)managedObjectContext{
@@ -52,36 +84,52 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    if (tableView == _tableView)
+    {
+        return [[self.fetchedResultsController sections] count] + [self sectionOffset];
+        
+    }else {
+        
+        return 1;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id  sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     
-    return [sectionInfo numberOfObjects];
+    id  sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section - [self sectionOffset]];
+    
+    return [sectionInfo numberOfObjects] + [self rowOffset];
+    
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    cell.textLabel.text = object.description;
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    return YES;
+    return NO;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
     return NO;
 }
 
+- (NSString *) cellIdentifierForIndexPath:(NSIndexPath *)indexPath{
+    return @"Cell";
+}
+
+- (UITableViewCellStyle) cellStyleForIndexPath:(NSIndexPath *) indexPath {
+    return UITableViewCellStyleDefault;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
+    NSString *CellIdentifier = [self cellIdentifierForIndexPath:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:[self cellStyleForIndexPath:indexPath] reuseIdentifier:CellIdentifier];
     }
     
     [self configureCell:cell atIndexPath:indexPath];
@@ -91,11 +139,13 @@
 
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+    
     [self.tableView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+    
+    newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row+[self rowOffset] inSection:newIndexPath.section + [self sectionOffset]];
     
     UITableView *tableView = self.tableView;
     
@@ -125,6 +175,8 @@
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id )sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
     
+    sectionIndex = sectionIndex + [self sectionOffset];
+    
     switch(type) {
             
         case NSFetchedResultsChangeInsert:
@@ -149,11 +201,11 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete", nil) message:NSLocalizedString(@"Are you sure to delete this entry?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Delete", nil), nil];
-        alert.tag = 666; // Evil
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Delete", nil) message:NSLocalizedString(@"Sind Sie sicher, dass sie diesen Eintag löschen möchten?", nil) delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", nil) otherButtonTitles:NSLocalizedString(@"Delete", nil), nil];
+        alert.tag = 666; //Evel Delete Alert (damit die Kinderklassen auch noch alerten können)
         [alert show];
         
-        _lastDeleteItemIndexPathAsked = indexPath;
+        _lastDeleteItemIndexPathAsked = [NSIndexPath indexPathForRow:indexPath.row+[self rowOffset] inSection:indexPath.section+[self sectionOffset]];
         
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -169,11 +221,11 @@
             // Delete the row from the data source
             // Delete the managed object at the given index path.
             NSManagedObject* objectToDelete = [self.fetchedResultsController objectAtIndexPath:_lastDeleteItemIndexPathAsked];
-            [self.managedObjectContext deleteObject:objectToDelete];
+            [objectToDelete.managedObjectContext deleteObject:objectToDelete];
             
             // Commit the change.
             NSError* error;
-            if (![self.managedObjectContext save:&error])
+            if (![objectToDelete.managedObjectContext save:&error])
             {
                 // Handle the error.
                 NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
@@ -188,49 +240,109 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    indexPath = [NSIndexPath indexPathForRow:indexPath.row+[self rowOffset] inSection:indexPath.section+[self sectionOffset]];
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-#pragma mark - NSFetchedResultsController Methods
+#pragma mark - NSFetchedResultsController
 
-/**
- * Use this method for you custom fetch request:
- *
- * NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
- * NSEntityDescription *entity = [NSEntityDescription
- * entityForName:@"Entity" inManagedObjectContext:self.managedObjectContext];
- * [fetchRequest setEntity:entity];
- 
- * [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"otherEntity == %@", self.managedObject]];
- 
- * NSSortDescriptor *sort = [[NSSortDescriptor alloc]
- * initWithKey:@"date" ascending:NO];
- * [fetchRequest setSortDescriptors:[NSArray arrayWithObject:sort]];
- *
- **/
+- (id)objectAtIndexPath:(NSIndexPath *)indexPath {
+    return [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row-[self rowOffset] inSection:indexPath.section-[self sectionOffset]]];
+}
 
-- (NSFetchRequest *) getFetchRequest{
-    
+- (NSUInteger)fetchBatchSize
+{
+    return 0;
+}
+
+- (NSPredicate *)fetchPredicate {
     return nil;
 }
 
-/**
- * Use this if your fetch result should support sections
- * This is optional
- * Return the entity attribute key
- */
+- (NSFetchRequest *) fetchRequest{
+    
+    //request
+    NSFetchRequest *fetchRequest = [NSFetchRequest new];
+    
+    //entity
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[self entityName] inManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    //predicate
+    NSPredicate *predicate = [self fetchPredicate];
+    if (predicate)
+        [fetchRequest setPredicate:predicate];
+    
+    //sort descriptors
+    NSArray *sortDescriptors = [self sortDescriptors];
+    
+    if (!sortDescriptors || [sortDescriptors count] == 0)
+    {
+        NSArray *sortKeys = [self sortKeys];
+        
+        if (sortKeys && [sortKeys count] > 0)
+        {
+            NSMutableArray *descriptors = [NSMutableArray new];
+            
+            for (NSString *key in sortKeys)
+            {
+                NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:key ascending:YES];
+                [descriptors addObject:sortDescriptor];
+            }
+            
+            sortDescriptors = [NSArray arrayWithArray:descriptors];
+        }
+    }
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    //batch size
+    [fetchRequest setFetchBatchSize:[self fetchBatchSize]];
+    
+    return fetchRequest;
+}
 
-- (NSString *) getSectionKeyPath{
+- (NSString *)entityName
+{
+    return nil;
+}
+
+
+- (NSArray *)sortDescriptors
+{
+    return nil;
+}
+
+
+- (NSArray *)sortKeys
+{
+    return nil;
+}
+
+- (NSString *) sectionKeyPath{
+    return nil;
+}
+
+- (NSUInteger) sectionOffset {
+    return 0;
+}
+
+- (NSUInteger) rowOffset {
+    return 0;
+}
+
+- (NSString *)cacheName {
     return nil;
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
     
+    
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
     
-    NSFetchRequest *fetchRequest = [self getFetchRequest];
+    NSFetchRequest *fetchRequest = [self fetchRequest];
     
     NSAssert(fetchRequest!=nil,@"No Fetch Request");
     NSAssert([self managedObjectContext]!=nil,@"No Managed Object");
@@ -238,8 +350,8 @@
     NSFetchedResultsController *theFetchedResultsController =
     [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
                                         managedObjectContext:[self managedObjectContext]
-                                          sectionNameKeyPath:[self getSectionKeyPath]
-                                                   cacheName:nil];
+                                          sectionNameKeyPath:[self sectionKeyPath]
+                                                   cacheName:[self cacheName]];
     
     self.fetchedResultsController = theFetchedResultsController;
     _fetchedResultsController.delegate = self;
@@ -248,5 +360,8 @@
     return _fetchedResultsController;
     
 }
+
+
+
 
 @end
