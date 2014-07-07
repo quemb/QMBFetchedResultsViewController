@@ -255,6 +255,10 @@
     return 0;
 }
 
+- (NSUInteger)fetchLimit {
+    return 0;
+}
+
 - (NSPredicate *)fetchPredicate {
     return nil;
 }
@@ -295,6 +299,10 @@
     }
     
     [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    if ([self fetchLimit] > 0){
+        [fetchRequest setFetchLimit:[self fetchLimit]];
+    }
     
     //batch size
     [fetchRequest setFetchBatchSize:[self fetchBatchSize]];

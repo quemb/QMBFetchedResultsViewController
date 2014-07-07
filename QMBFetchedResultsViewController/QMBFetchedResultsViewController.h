@@ -28,6 +28,7 @@
 
 - (NSFetchRequest *) fetchRequest;
 - (NSPredicate *) fetchPredicate;
+- (NSUInteger) fetchLimit;
 - (NSString *) entityName;
 - (NSArray *) sortDescriptors;
 - (NSArray *) sortKeys;
