@@ -25,6 +25,7 @@
 //Abstract Mathods
 - (NSString *) cellIdentifierForIndexPath:(NSIndexPath *)indexPath;
 - (UITableViewCellStyle) cellStyleForIndexPath:(NSIndexPath *) indexPath;
+- (UITableViewStyle) tableViewStyle;
 
 - (NSFetchRequest *) fetchRequest;
 - (NSPredicate *) fetchPredicate;

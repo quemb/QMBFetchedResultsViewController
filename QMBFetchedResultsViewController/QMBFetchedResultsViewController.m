@@ -22,6 +22,24 @@
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObject = _managedObject;
 
+- (id)init {
+    self = [super init];
+    
+    if (self){
+        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.frame style:[self tableViewStyle]];
+        [tableView setDelegate:self];
+        [tableView setDataSource:self];
+        self.tableView = tableView;
+        self.view = tableView;
+    }
+    
+    return self;
+}
+
+- (UITableViewStyle) tableViewStyle {
+    return UITableViewStylePlain;
+}
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
