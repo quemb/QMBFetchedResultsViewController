@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		89CA76461BB5756000093731 /* QMBResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89CA76451BB5756000093731 /* QMBResultsViewController.m */; settings = {ASSET_TAGS = (); }; };
 		E2B048FF17919389007C45ED /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B048FE17919389007C45ED /* UIKit.framework */; };
 		E2B0490117919389007C45ED /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B0490017919389007C45ED /* Foundation.framework */; };
 		E2B0490317919389007C45ED /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2B0490217919389007C45ED /* CoreGraphics.framework */; };
@@ -27,6 +28,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		89CA76441BB5756000093731 /* QMBResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMBResultsViewController.h; sourceTree = "<group>"; };
+		89CA76451BB5756000093731 /* QMBResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBResultsViewController.m; sourceTree = "<group>"; };
 		E2B048FB17919389007C45ED /* QMBFetchedResultsViewController Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "QMBFetchedResultsViewController Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2B048FE17919389007C45ED /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E2B0490017919389007C45ED /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -133,6 +136,8 @@
 				E2B04922179193A3007C45ED /* QMBFetchedResultsViewController.m */,
 				E2FA909B1928F919003D35D9 /* QMBFetchedSearchResultsViewController.h */,
 				E2FA909C1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m */,
+				89CA76441BB5756000093731 /* QMBResultsViewController.h */,
+				89CA76451BB5756000093731 /* QMBResultsViewController.m */,
 			);
 			name = QMBFetchedResultsViewController;
 			path = ../QMBFetchedResultsViewController;
@@ -200,7 +205,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = QMB;
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Toni Möckel";
 			};
 			buildConfigurationList = E2B048F617919389007C45ED /* Build configuration list for PBXProject "QMBFetchedResultsViewController Sample" */;
@@ -247,6 +252,7 @@
 				E2B04923179193A3007C45ED /* QMBFetchedResultsViewController.m in Sources */,
 				E2FA909D1928F919003D35D9 /* QMBFetchedSearchResultsViewController.m in Sources */,
 				E2B0492817919418007C45ED /* QMBViewController.m in Sources */,
+				89CA76461BB5756000093731 /* QMBResultsViewController.m in Sources */,
 				E2B0492B179194B3007C45ED /* Sample.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,6 +285,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -290,7 +297,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -315,7 +322,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -329,7 +336,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QMBFetchedResultsViewController Sample/QMBFetchedResultsViewController Sample-Prefix.pch";
 				INFOPLIST_FILE = "QMBFetchedResultsViewController Sample/QMBFetchedResultsViewController Sample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quemb.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -341,7 +348,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "QMBFetchedResultsViewController Sample/QMBFetchedResultsViewController Sample-Prefix.pch";
 				INFOPLIST_FILE = "QMBFetchedResultsViewController Sample/QMBFetchedResultsViewController Sample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quemb.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

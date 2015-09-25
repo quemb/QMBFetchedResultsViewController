@@ -26,14 +26,15 @@
     self = [super init];
     
     if (self){
-        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.frame style:[self tableViewStyle]];
-        [tableView setDelegate:self];
-        [tableView setDataSource:self];
-        self.tableView = tableView;
-        self.view = tableView;
+
     }
     
     return self;
+}
+
+- (void)loadView {
+    [super loadView];
+
 }
 
 - (UITableViewStyle) tableViewStyle {
@@ -53,6 +54,15 @@
 {
     
     [super viewDidLoad];
+
+    if (self.tableView == nil){
+        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.frame style:[self tableViewStyle]];
+        [tableView setDelegate:self];
+        [tableView setDataSource:self];
+        self.tableView = tableView;
+
+        self.view = self.tableView;
+    }
     
 	[self performFetch];
     
@@ -123,7 +133,7 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [NSString stringWithFormat:@"%d",indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"%ld",(long)indexPath.row];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -203,6 +213,9 @@
             
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        default:
             break;
     }
 }

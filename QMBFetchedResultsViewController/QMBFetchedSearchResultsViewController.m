@@ -7,12 +7,16 @@
 //
 
 #import "QMBFetchedSearchResultsViewController.h"
+#import "QMBResultsViewController.h"
 
-@interface QMBFetchedSearchResultsViewController () {
+@interface QMBFetchedSearchResultsViewController ()<UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>{
     NSArray *_filteredObjects;
     NSMutableDictionary *_filteredResults;
     UILabel *_noResultsLabel;
 }
+
+@property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong) QMBResultsViewController *resultsTableController;
 
 @end
 
@@ -25,6 +29,24 @@
     
     [super viewDidLoad];
     
+    _resultsTableController = [[QMBResultsViewController alloc] init];
+    _searchController = [[UISearchController alloc] initWithSearchResultsController:self.resultsTableController];
+    self.searchController.searchResultsUpdater = self;
+    [self.searchController.searchBar sizeToFit];
+    self.tableView.tableHeaderView = self.searchController.searchBar;
+    
+    // we want to be the delegate for our filtered table so didSelectRowAtIndexPath is called for both tables
+    self.resultsTableController.tableView.delegate = self;
+    self.resultsTableController.tableView.dataSource = self;
+    self.searchController.delegate = self;
+    self.searchController.dimsBackgroundDuringPresentation = NO; // default is YES
+    self.searchController.searchBar.delegate = self; // so we can monitor text changes + others
+    
+    // Search is now just presenting a view controller. As such, normal view controller
+    // presentation semantics apply. Namely that presentation will walk up the view controller
+    // hierarchy until it finds the root view controller or one that defines a presentation context.
+    //
+    self.definesPresentationContext = YES;  // know where you want UISearchController to be displayed
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -58,6 +80,7 @@
 - (void)configureCell:(UITableViewCell *)cell forTableView:(UITableView *)tableView atIndexPath:(NSIndexPath *)indexPath {
     
     NSObject *object = [self objectAtIndexPath:indexPath forTableView:tableView];
+    
     cell.textLabel.text = object.description;
     cell.detailTextLabel.text = object.description;
     
@@ -96,11 +119,50 @@
 - (id) objectAtIndexPath:(NSIndexPath *)indexPath forTableView:(UITableView *) tableView {
     if (self.tableView == tableView){
         return [self objectAtIndexPath:indexPath];
-    }else if (self.searchDisplayController.searchResultsTableView == tableView){
+    }else if (self.resultsTableController.tableView == tableView){
         return [_filteredObjects objectAtIndex:indexPath.row];
     }
     return nil;
 }
+
+
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+}
+
+
+#pragma mark - UISearchControllerDelegate
+
+// Called after the search controller's search bar has agreed to begin editing or when
+// 'active' is set to YES.
+// If you choose not to present the controller yourself or do not implement this method,
+// a default presentation is performed on your behalf.
+//
+// Implement this method if the default presentation is not adequate for your purposes.
+//
+- (void)presentSearchController:(UISearchController *)searchController {
+    
+}
+
+- (void)willPresentSearchController:(UISearchController *)searchController {
+    // do something before the search controller is presented
+}
+
+- (void)didPresentSearchController:(UISearchController *)searchController {
+    // do something after the search controller is presented
+}
+
+- (void)willDismissSearchController:(UISearchController *)searchController {
+    // do something before the search controller is dismissed
+}
+
+- (void)didDismissSearchController:(UISearchController *)searchController {
+    // do something after the search controller is dismissed
+}
+
 
 #pragma mark - Content Filtering
 
@@ -168,61 +230,19 @@
         _noResultsLabel.text = [NSString stringWithFormat:NSLocalizedString(@"Enter %d letters or more.", nil), [self noOfLettersInSearch]];
     }
     
-    [self.searchDisplayController.searchResultsTableView reloadData];
+    [self.resultsTableController.tableView reloadData];
 }
 
 
-#pragma mark - UISearchDisplayDelegate
 
+#pragma mark - UISearchResultsUpdating
 
-- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView
-{
-    
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
+    // update the filtered array based on the search text
+    NSString *searchText = searchController.searchBar.text;
+    [self filterContentForSearchText:searchText scope:searchController.searchBar.selectedScopeButtonIndex];
 }
 
-
-- (void)searchDisplayController:(UISearchDisplayController *)controller willUnloadSearchResultsTableView:(UITableView *)tableView
-{
-    _filteredObjects = nil;
-}
-
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
-{
-    if (!_noResultsLabel)
-    {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.001), dispatch_get_main_queue(), ^(void) {
-            for (UIView *v in self.searchDisplayController.searchResultsTableView.subviews)
-            {
-                if ([v isKindOfClass: [UILabel class]] && [[(UILabel*)v text] isEqualToString:@"No Results"])
-                {
-                    _noResultsLabel = (UILabel *)v;
-                    
-                    if ([searchString length] < [self noOfLettersInSearch])
-                    {
-                        _noResultsLabel.text = [NSString stringWithFormat:@"Enter %d letters or more.", [self noOfLettersInSearch]];
-                    }
-                    
-                    break;
-                }
-            }
-        });
-    }
-    
-    [self filterContentForSearchText:searchString
-                               scope:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
-    
-    return YES;
-}
-
-
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
-    [self filterContentForSearchText:[self.searchDisplayController.searchBar text]
-                               scope:[self.searchDisplayController.searchBar selectedScopeButtonIndex]];
-    
-    return YES;
-}
 
 
 

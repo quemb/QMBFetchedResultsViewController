@@ -10,6 +10,7 @@
 
 @interface QMBFetchedSearchResultsViewController : QMBFetchedResultsViewController
 
+
 - (id) objectAtIndexPath:(NSIndexPath *)indexPath forTableView:(UITableView *) tableView;
 - (NSString *) cellIdentifierForIndexPath:(NSIndexPath *)indexPath withTableView:(UITableView *) tableView;
 - (UITableViewCellStyle) cellStyleForIndexPath:(NSIndexPath *) indexPath withTableView:(UITableView *) tableView;
@@ -19,5 +20,8 @@
 
 - (NSPredicate *)searchPredicateWithSearchText:(NSString *)searchText scope:(NSInteger)scope;
 - (NSUInteger)noOfLettersInSearch;
+
+
+
 
 @end
